@@ -78,7 +78,7 @@ public class ErrorResponse {
 					error.getDefaultMessage()))
 				.collect(Collectors.toList());
 		}
-		
+
 	}
 
 }

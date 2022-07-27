@@ -11,4 +11,3 @@ public class InvalidValueException extends BusinessException {
 	}
 
 }
-
