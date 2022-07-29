@@ -25,6 +25,12 @@ public class Store extends BaseEntity {
 	@Column(nullable = false)
 	private String address;
 
+	@Column(nullable = false)
+	private double latitude;
+
+	@Column(nullable = false)
+	private double longitude;
+
 	@Lob
 	private String introduce;
 
