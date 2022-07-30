@@ -1,5 +1,8 @@
 package umc.server.baeksstreetmapserver.store.dto.response;
 
+import lombok.Builder;
+
+@Builder
 public class StoreInBoundaryResponse {
 
 	private Long storeIdx;
