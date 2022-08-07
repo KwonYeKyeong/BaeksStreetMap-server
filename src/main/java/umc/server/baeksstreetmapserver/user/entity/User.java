@@ -9,12 +9,11 @@ import umc.server.baeksstreetmapserver.common.Status;
 import javax.persistence.*;
 
 @Getter
-@Table(name="user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class User extends BaseEntity {
 
-    private static final int MAX_NAME_LENGTH = 40;
+    private static final int MAX_NAME_LENGTH = 30;
     private static final int MAX_PASSWORD_LENGTH = 30;
     private static final int MAX_ID_LENGTH = 20;
 
@@ -23,17 +22,17 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "login_id", nullable = false, length = MAX_ID_LENGTH)
+    @Column(name = "login_id", nullable = false, length = MAX_ID_LENGTH,unique = true)
     private String loginId;
 
     @Column(name = "password", nullable = false, length = MAX_PASSWORD_LENGTH)
     private String password;
 
-    @Column(name = "nickname", nullable = false, length = MAX_NAME_LENGTH)
-    private String name;
+    @Column(name = "nickname", nullable = false, length = MAX_NAME_LENGTH, unique = true)
+    private String nickname;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
@@ -42,4 +41,15 @@ public class User extends BaseEntity {
     @Column(name = "profile_image")
     private String image;
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setName(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 }
