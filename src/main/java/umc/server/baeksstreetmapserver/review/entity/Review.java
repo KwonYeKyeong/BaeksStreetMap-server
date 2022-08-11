@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import umc.server.baeksstreetmapserver.common.BaseEntity;
 import umc.server.baeksstreetmapserver.common.Status;
+import umc.server.baeksstreetmapserver.review.BooleanToYNConverter;
 import umc.server.baeksstreetmapserver.store.entity.Menu;
 import umc.server.baeksstreetmapserver.store.entity.Store;
 import umc.server.baeksstreetmapserver.user.entity.User;
@@ -18,21 +19,23 @@ public class Review extends BaseEntity {
 
 
     @Id
-    @Column(name = "idx")
+    @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
+    @Convert(converter = BooleanToYNConverter.class)
     @Column(nullable = false)
-    private Long likes;
+    private boolean likes;
+
 
     @Column(nullable = false)
     private Long changes;
 
-    @Column(name = "review_text")
+    @Column
     private String text;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "review_status", nullable = false)
+    @Column(nullable = false)
     private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -47,6 +50,14 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "store_idx", nullable = false)
     private Store store;
 
+
+    /* likes, changes, text, status만 수정 가능*/
+    public void modify(boolean likes, Long changes, String text, Status status){
+        this.likes = likes;
+        this.changes = changes;
+        this.text = text;
+        this.status = status;
+    }
 
 }
 
