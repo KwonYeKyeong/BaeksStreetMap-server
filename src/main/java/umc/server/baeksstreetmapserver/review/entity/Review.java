@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import umc.server.baeksstreetmapserver.common.BaseEntity;
 import umc.server.baeksstreetmapserver.common.Status;
-import umc.server.baeksstreetmapserver.review.BooleanToYNConverter;
+import umc.server.baeksstreetmapserver.review.converter.BooleanToYNConverter;
 import umc.server.baeksstreetmapserver.store.entity.Menu;
 import umc.server.baeksstreetmapserver.store.entity.Store;
 import umc.server.baeksstreetmapserver.user.entity.User;
