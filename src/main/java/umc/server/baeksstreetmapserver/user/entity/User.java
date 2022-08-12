@@ -1,15 +1,15 @@
 package umc.server.baeksstreetmapserver.user.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import umc.server.baeksstreetmapserver.common.BaseEntity;
 import umc.server.baeksstreetmapserver.common.Status;
 
 import javax.persistence.*;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter
+@ToString
+// NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class User extends BaseEntity {
 
@@ -41,15 +41,4 @@ public class User extends BaseEntity {
     @Column(name = "profile_image")
     private String image;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setName(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
 }
