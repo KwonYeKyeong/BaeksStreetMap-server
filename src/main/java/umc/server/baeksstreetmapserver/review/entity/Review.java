@@ -32,7 +32,7 @@ public class Review extends BaseEntity {
     @Column(nullable = false)
     private Long changes;
 
-    @Column
+    @Lob
     private String text;
 
     @Enumerated(EnumType.STRING)
