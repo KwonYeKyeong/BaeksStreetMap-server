@@ -36,7 +36,7 @@ public class StoreService {
 
 	private final StoreMapper storeMapper = Mappers.getMapper(StoreMapper.class);
 
-	public List<StoreInBoundaryResponse> getAllInBoundary(List<Double> latitudes, List<Double> longitudes){
+	public List<StoreInBoundaryResponse> getAllInBoundary(List<Double> latitudes, List<Double> longitudes) {
 		latitudes.sort(Comparator.naturalOrder());
 		longitudes.sort(Comparator.naturalOrder());
 
@@ -47,7 +47,7 @@ public class StoreService {
 			.collect(Collectors.toList());
 	}
 
-	public StoreBriefInfoResponse getBriefInfo(Long storeIdx){
+	public StoreBriefInfoResponse getBriefInfo(Long storeIdx) {
 		Store store = storeRepository.findById(storeIdx)
 			.orElseThrow(() -> new StoreNotFoundException("식당을 찾을 수 없습니다. storeIdx : " + storeIdx));
 
@@ -68,10 +68,10 @@ public class StoreService {
 		List<Long> keywordList = reviewKeywordRepository.findKeywordsIn(reviewList);
 
 		return new StoreBriefInfoResponse(
-			storeIdx, store.getName(), changesWithTheMost, Math.round((float)likesCnt / totalCnt * 100), bestMenu.getName(), keywordList);
+			storeIdx, store.getName(), changesWithTheMost, Math.round((float) likesCnt / totalCnt * 100), bestMenu.getName(), keywordList);
 	}
 
-	public StoreDetailInfoResponse getDetailInfo(Long storeIdx){
+	public StoreDetailInfoResponse getDetailInfo(Long storeIdx) {
 		Store store = storeRepository.findById(storeIdx)
 			.orElseThrow(() -> new StoreNotFoundException("식당을 찾을 수 없습니다. storeIdx : " + storeIdx));
 
@@ -84,12 +84,12 @@ public class StoreService {
 
 		List<Review> reviewList = reviewRepository.findByStoreOrderByCreatedAtDesc(store);
 		List<ReviewDto> reviewDtoList = new ArrayList<>();
-		for(Review review : reviewList){
+		for (Review review : reviewList) {
 			List<Keyword> keywordList = reviewKeywordRepository.findByReview(review);
 			reviewDtoList.add(ReviewDto.of(review, keywordList));
 		}
 
-		return StoreDetailInfoResponse.of(store, Math.round((float)likesCnt / totalCnt * 100), menuList, reviewDtoList);
+		return StoreDetailInfoResponse.of(store, Math.round((float) likesCnt / totalCnt * 100), menuList, reviewDtoList);
 	}
 
 }

@@ -34,7 +34,7 @@ public class StoreDetailInfoResponse {
 		this.reviews = reviews;
 	}
 
-	public static StoreDetailInfoResponse of(Store store, int like, List<Menu> menuList, List<ReviewDto> reviewList){
+	public static StoreDetailInfoResponse of(Store store, int like, List<Menu> menuList, List<ReviewDto> reviewList) {
 		List<String> menuNameList = menuList.stream().map(Menu::getName).collect(Collectors.toList());
 
 		return new StoreDetailInfoResponse(store.getIdx(), store.getName(), store.getIntroduce(), like,
