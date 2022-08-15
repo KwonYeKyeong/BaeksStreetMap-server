@@ -51,19 +51,13 @@ public class Review extends BaseEntity {
     @JoinColumn(name = "store_idx", nullable = false)
     private Store store;
 
-    @OneToMany(mappedBy = "idx")
-    @Column(nullable = false)
-    private List<Keyword> keywordList;
-
-
     /* likes, changes, text, status, menu_idx, keywordList만 수정 가능*/
-    public void modify(boolean likes, Long changes, String text, Status status, Menu menu, List<Keyword> keywordList){
+    public void modify(boolean likes, Long changes, String text, Status status, Menu menu){
         this.likes = likes;
         this.changes = changes;
         this.text = text;
         this.status = status;
         this.menu = menu;
-        this.keywordList = keywordList;
     }
 
 }
