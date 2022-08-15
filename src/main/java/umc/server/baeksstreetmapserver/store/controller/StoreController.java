@@ -43,7 +43,7 @@ public class StoreController {
 
 	@GetMapping("/search")
 	public ResponseEntity<List<StoreSearchResponse>> search(
-		@RequestParam(required = false) String query, @RequestParam(required = false) List<Long> keyword, @Valid @RequestParam(required = false) List<Region> region){
+		@RequestParam(required = false) String query, @RequestParam(required = false) List<Long> keyword, @Valid @RequestParam(required = false) List<Region> region) {
 		List<StoreSearchResponse> response = storeService.search(query, keyword, region);
 		return ResponseEntity.ok(response);
 	}

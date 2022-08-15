@@ -28,7 +28,7 @@ public class StoreSearchResponse {
 		this.longitude = longitude;
 	}
 
-	public static StoreSearchResponse of(Store store, int like, List<Menu> menu){
+	public static StoreSearchResponse of(Store store, int like, List<Menu> menu) {
 		List<String> menuNameList = menu.stream().map(Menu::getName).collect(Collectors.toList());
 		return new StoreSearchResponse(store.getIdx(), store.getName(), like, store.getImage(), menuNameList, store.getLatitude(), store.getLongitude());
 	}
