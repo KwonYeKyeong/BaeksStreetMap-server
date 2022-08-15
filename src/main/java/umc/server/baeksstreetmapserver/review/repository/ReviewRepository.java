@@ -28,6 +28,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 		"ORDER BY COUNT(r.menu_idx) DESC LIMIT 1", nativeQuery = true)
 	Long getBestMenuIdx(Long storeIdx);
 
-	List<Review> findByStore(Store store);
+	List<Review> findByStoreOrderByCreatedAtDesc(Store store);
 
 }

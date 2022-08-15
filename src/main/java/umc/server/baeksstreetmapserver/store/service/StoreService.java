@@ -4,11 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import umc.server.baeksstreetmapserver.review.dto.ReviewDto;
 import umc.server.baeksstreetmapserver.review.entity.Keyword;
 import umc.server.baeksstreetmapserver.review.entity.Review;
 import umc.server.baeksstreetmapserver.review.repository.ReviewKeywordRepository;
 import umc.server.baeksstreetmapserver.review.repository.ReviewRepository;
 import umc.server.baeksstreetmapserver.store.dto.response.StoreBriefInfoResponse;
+import umc.server.baeksstreetmapserver.store.dto.response.StoreDetailInfoResponse;
 import umc.server.baeksstreetmapserver.store.dto.response.StoreInBoundaryResponse;
 import umc.server.baeksstreetmapserver.store.entity.Menu;
 import umc.server.baeksstreetmapserver.store.entity.Store;
@@ -17,6 +19,7 @@ import umc.server.baeksstreetmapserver.store.mapper.StoreMapper;
 import umc.server.baeksstreetmapserver.store.repository.MenuRepository;
 import umc.server.baeksstreetmapserver.store.repository.StoreRepository;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -61,11 +64,32 @@ public class StoreService {
 			menuRepository.findFirstByStore(store) : menuRepository.getReferenceById(bestMenuIdx);
 
 		// 키워드 목록
-		List<Review> reviewList = reviewRepository.findByStore(store);
+		List<Review> reviewList = reviewRepository.findByStoreOrderByCreatedAtDesc(store);
 		List<Long> keywordList = reviewKeywordRepository.findKeywordsIn(reviewList);
 
 		return new StoreBriefInfoResponse(
 			storeIdx, store.getName(), changesWithTheMost, Math.round((float)likesCnt / totalCnt * 100), bestMenu.getName(), keywordList);
+	}
+
+	public StoreDetailInfoResponse getDetailInfo(Long storeIdx){
+		Store store = storeRepository.findById(storeIdx)
+			.orElseThrow(() -> new StoreNotFoundException("식당을 찾을 수 없습니다. storeIdx : " + storeIdx));
+
+		// 좋아요(%)
+		Long totalCnt = reviewRepository.countByStore(store);
+		Long likesCnt = reviewRepository.countByStoreAndLikes(store);
+
+		// 메뉴 목록
+		List<Menu> menuList = menuRepository.findByStore(store);
+
+		List<Review> reviewList = reviewRepository.findByStoreOrderByCreatedAtDesc(store);
+		List<ReviewDto> reviewDtoList = new ArrayList<>();
+		for(Review review : reviewList){
+			List<Keyword> keywordList = reviewKeywordRepository.findByReview(review);
+			reviewDtoList.add(ReviewDto.of(review, keywordList));
+		}
+
+		return StoreDetailInfoResponse.of(store, Math.round((float)likesCnt / totalCnt * 100), menuList, reviewDtoList);
 	}
 
 }
