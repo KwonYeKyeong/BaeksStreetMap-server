@@ -13,4 +13,6 @@ public interface ReviewKeywordRepository extends JpaRepository<ReviewKeyword, Lo
 	@Query(value = "SELECT rk.keyword.idx from ReviewKeyword rk WHERE rk.review in :reviewList")
 	List<Long> findKeywordsIn(List<Review> reviewList);
 
+	List<Keyword> findByReview(Review review);
+
 }

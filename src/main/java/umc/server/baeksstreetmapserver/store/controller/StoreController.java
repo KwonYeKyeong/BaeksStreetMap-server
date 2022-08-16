@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import umc.server.baeksstreetmapserver.store.dto.response.StoreBriefInfoResponse;
+import umc.server.baeksstreetmapserver.store.dto.response.StoreDetailInfoResponse;
 import umc.server.baeksstreetmapserver.store.dto.response.StoreInBoundaryResponse;
 import umc.server.baeksstreetmapserver.store.service.StoreService;
 
@@ -26,8 +27,14 @@ public class StoreController {
 	}
 
 	@GetMapping("/{storeIdx}")
-	public ResponseEntity<StoreBriefInfoResponse> getBriefInfo(@PathVariable Long storeIdx){
+	public ResponseEntity<StoreBriefInfoResponse> getBriefInfo(@PathVariable Long storeIdx) {
 		StoreBriefInfoResponse response = storeService.getBriefInfo(storeIdx);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/{storeIdx}/detail")
+	public ResponseEntity<StoreDetailInfoResponse> getDetailInfo(@PathVariable Long storeIdx) {
+		StoreDetailInfoResponse response = storeService.getDetailInfo(storeIdx);
 		return ResponseEntity.ok(response);
 	}
 
