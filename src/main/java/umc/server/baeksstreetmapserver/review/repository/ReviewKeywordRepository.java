@@ -15,4 +15,7 @@ public interface ReviewKeywordRepository extends JpaRepository<ReviewKeyword, Lo
 
 	List<Keyword> findByReview(Review review);
 
+	@Query(value = "SELECT rk.review from ReviewKeyword rk WHERE rk.keyword in :keywordList")
+	List<Review> findReviewsIn(List<Keyword> keywordList);
+
 }
