@@ -50,12 +50,11 @@ public class Review extends BaseEntity {
     private Store store;
 
 
-    /* likes, changes, text, status, menu_idx만 수정 가능*/
-    public void modify(Boolean likes, Long changes, String text, Status status, Menu menu){
+    /* likes, changes, text, menu_idx만 수정 가능*/
+    public void modify(Boolean likes, Long changes, String text, Menu menu){
         this.likes = likes;
         this.changes = changes;
         this.text = text;
-        this.status = status;
         this.menu = menu;
     }
 

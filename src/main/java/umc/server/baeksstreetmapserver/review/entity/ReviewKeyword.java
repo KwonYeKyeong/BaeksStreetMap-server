@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import umc.server.baeksstreetmapserver.store.entity.Menu;
 
 import javax.persistence.*;
 

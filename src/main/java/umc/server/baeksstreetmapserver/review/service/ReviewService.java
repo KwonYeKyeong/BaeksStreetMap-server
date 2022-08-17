@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.server.baeksstreetmapserver.common.Status;
+import umc.server.baeksstreetmapserver.review.dto.ModifyReviewRequest;
+import umc.server.baeksstreetmapserver.review.dto.ModifyReviewResponse;
 import umc.server.baeksstreetmapserver.review.dto.RegisterReviewRequest;
 import umc.server.baeksstreetmapserver.review.dto.RegisterReviewResponse;
 import umc.server.baeksstreetmapserver.review.entity.Keyword;
@@ -16,6 +18,8 @@ import umc.server.baeksstreetmapserver.store.entity.Menu;
 import umc.server.baeksstreetmapserver.store.entity.Store;
 import umc.server.baeksstreetmapserver.store.repository.MenuRepository;
 import umc.server.baeksstreetmapserver.store.repository.StoreRepository;
+
+import java.util.List;
 
 
 @Transactional(readOnly = true)
@@ -30,7 +34,7 @@ public class ReviewService {
     private final ReviewKeywordRepository reviewKeywordRepository;
 
     @Transactional
-    public RegisterReviewResponse registerReview (Long storeIdx, RegisterReviewRequest request) {
+    public RegisterReviewResponse registerReview(Long storeIdx, RegisterReviewRequest request) {
 
         Menu menu = menuRepository.findById(request.getBestMenu()).get();
         Store store = storeRepository.findById(storeIdx).get();
@@ -53,5 +57,14 @@ public class ReviewService {
             reviewKeywordRepository.save(reviewKeyword);
         }
         return new RegisterReviewResponse(review.getIdx());
+    }
+
+    @Transactional
+    public ModifyReviewResponse modifyReview(Long reviewIdx, ModifyReviewRequest request) {
+
+        Review review = reviewRepository.findById(reviewIdx).get();
+        Menu menu = menuRepository.findById(request.getBestMenu()).get();
+        review.modify(request.getLike().equals("Y") ? true : false, request.getChange(), request.getReviewText(), menu);
+        return new ModifyReviewResponse(reviewIdx, review.getUpdatedAt());
     }
 }
