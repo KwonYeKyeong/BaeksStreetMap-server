@@ -14,7 +14,7 @@ public class LoginIdDuplicateCheckResponse {
 		this.result = result;
 	}
 
-	public static LoginIdDuplicateCheckResponse of(boolean duplicatedOrNot){
+	public static LoginIdDuplicateCheckResponse of(boolean duplicatedOrNot) {
 		return new LoginIdDuplicateCheckResponse(duplicatedOrNot == true ? DUPLICATED_MESSAGE : NOT_DUPLICATED_MESSAGE);
 	}
 

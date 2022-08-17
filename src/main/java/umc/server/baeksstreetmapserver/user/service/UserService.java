@@ -12,7 +12,7 @@ public class UserService {
 
 	private final UserRepository userRepository;
 
-	public boolean loginIdDuplicateCheck(String loginId){
+	public boolean loginIdDuplicateCheck(String loginId) {
 		return userRepository.existsByLoginId(loginId);
 	}
 
