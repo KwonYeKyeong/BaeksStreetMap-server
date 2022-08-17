@@ -1,6 +1,7 @@
 package umc.server.baeksstreetmapserver.review.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import umc.server.baeksstreetmapserver.common.BaseEntity;
@@ -31,4 +32,10 @@ public class Report extends BaseEntity {
     @JoinColumn(name = "review_idx", nullable = false)
     private Review review;
 
+    @Builder
+    public Report(Long reason, Status status, Review review) {
+        this.reason = reason;
+        this.status = status;
+        this.review = review;
+    }
 }

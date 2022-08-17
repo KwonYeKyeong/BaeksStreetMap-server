@@ -34,6 +34,12 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PostMapping("/{reviewIdx}")
+    public ResponseEntity<ReportReviewResponse> reportReview(@PathVariable Long reviewIdx, @RequestBody ReportReviewRequest request) {
+        ReportReviewResponse response = reviewService.reportReview(reviewIdx, request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
 
 
 
