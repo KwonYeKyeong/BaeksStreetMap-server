@@ -16,4 +16,8 @@ public class UserService {
 		return userRepository.existsByLoginId(loginId);
 	}
 
+	public boolean emailDuplicateCheck(String email) {
+		return userRepository.existsByEmail(email);
+	}
+
 }
