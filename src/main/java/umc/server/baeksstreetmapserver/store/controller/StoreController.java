@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import umc.server.baeksstreetmapserver.store.dto.response.StoreBriefInfoResponse;
 import umc.server.baeksstreetmapserver.store.dto.response.StoreDetailInfoResponse;
 import umc.server.baeksstreetmapserver.store.dto.response.StoreInBoundaryResponse;
+import umc.server.baeksstreetmapserver.store.dto.response.StoreSearchResponse;
+import umc.server.baeksstreetmapserver.store.entity.Region;
 import umc.server.baeksstreetmapserver.store.service.StoreService;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -35,6 +38,13 @@ public class StoreController {
 	@GetMapping("/{storeIdx}/detail")
 	public ResponseEntity<StoreDetailInfoResponse> getDetailInfo(@PathVariable Long storeIdx) {
 		StoreDetailInfoResponse response = storeService.getDetailInfo(storeIdx);
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/search")
+	public ResponseEntity<List<StoreSearchResponse>> search(
+		@RequestParam(required = false) String query, @RequestParam(required = false) List<Long> keyword, @Valid @RequestParam(required = false) List<Region> region) {
+		List<StoreSearchResponse> response = storeService.search(query, keyword, region);
 		return ResponseEntity.ok(response);
 	}
 
