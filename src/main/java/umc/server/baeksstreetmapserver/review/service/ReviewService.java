@@ -20,9 +20,7 @@ import umc.server.baeksstreetmapserver.store.entity.Store;
 import umc.server.baeksstreetmapserver.store.repository.MenuRepository;
 import umc.server.baeksstreetmapserver.store.repository.StoreRepository;
 
-
 import java.util.List;
-
 
 
 @Transactional(readOnly = true)
