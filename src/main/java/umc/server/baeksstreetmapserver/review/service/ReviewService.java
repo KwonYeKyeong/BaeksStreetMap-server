@@ -61,6 +61,21 @@ public class ReviewService {
 
         Review review = reviewRepository.findById(reviewIdx).get();
         Menu menu = menuRepository.findById(request.getBestMenu()).get();
+        // 기존의 keyword 삭제
+        List<ReviewKeyword> reviewKeywordList = reviewKeywordRepository.findKeywordByReview(review);
+        for(ReviewKeyword reviewKeyword : reviewKeywordList) {
+            reviewKeywordRepository.delete(reviewKeyword);
+        }
+
+        // 요청으로 받은 keyword 등록
+        for(Long keywordIdx : request.getKeyword()) {
+            Keyword keyword = keywordRepository.findById(keywordIdx).get();
+            ReviewKeyword reviewKeyword = ReviewKeyword.builder()
+                    .review(review)
+                    .keyword(keyword)
+                    .build();
+            reviewKeywordRepository.save(reviewKeyword);
+        }
         review.modify(request.getLike().equals("Y") ? true : false, request.getChange(), request.getReviewText(), menu);
         return new ModifyReviewResponse(reviewIdx, review.getUpdatedAt());
     }
