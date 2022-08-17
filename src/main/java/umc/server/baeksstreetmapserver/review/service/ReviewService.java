@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.server.baeksstreetmapserver.common.Status;
-import umc.server.baeksstreetmapserver.review.dto.ModifyReviewRequest;
-import umc.server.baeksstreetmapserver.review.dto.ModifyReviewResponse;
-import umc.server.baeksstreetmapserver.review.dto.RegisterReviewRequest;
-import umc.server.baeksstreetmapserver.review.dto.RegisterReviewResponse;
+import umc.server.baeksstreetmapserver.review.dto.*;
 import umc.server.baeksstreetmapserver.review.entity.Keyword;
 import umc.server.baeksstreetmapserver.review.entity.Review;
 import umc.server.baeksstreetmapserver.review.entity.ReviewKeyword;
@@ -66,5 +63,12 @@ public class ReviewService {
         Menu menu = menuRepository.findById(request.getBestMenu()).get();
         review.modify(request.getLike().equals("Y") ? true : false, request.getChange(), request.getReviewText(), menu);
         return new ModifyReviewResponse(reviewIdx, review.getUpdatedAt());
+    }
+
+    @Transactional
+    public DeleteReviewResponse deleteReview(Long reviewIdx) {
+        Review review = reviewRepository.findById(reviewIdx).get();
+        review.delete();
+        return new DeleteReviewResponse(reviewIdx, review.getStatus());
     }
 }

@@ -58,6 +58,10 @@ public class Review extends BaseEntity {
         this.menu = menu;
     }
 
+    public void delete() {
+        this.status = Status.INACTIVE;
+    }
+
     @Builder
     public Review(Long idx, boolean likes, Long changes, String text, Menu menu, Status status, Store store) {
         this.idx = idx;
