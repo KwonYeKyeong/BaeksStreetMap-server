@@ -4,11 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.server.baeksstreetmapserver.common.Status;
-
-
 import umc.server.baeksstreetmapserver.review.dto.*;
-
-
 import umc.server.baeksstreetmapserver.review.entity.Keyword;
 import umc.server.baeksstreetmapserver.review.entity.Review;
 import umc.server.baeksstreetmapserver.review.entity.ReviewKeyword;
