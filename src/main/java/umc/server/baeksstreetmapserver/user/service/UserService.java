@@ -20,4 +20,8 @@ public class UserService {
 		return userRepository.existsByEmail(email);
 	}
 
+	public boolean nicknameDuplicateCheck(String nickname) {
+		return userRepository.existsByNickname(nickname);
+	}
+
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import umc.server.baeksstreetmapserver.user.dto.response.EmailDuplicateCheckResponse;
 import umc.server.baeksstreetmapserver.user.dto.response.LoginIdDuplicateCheckResponse;
+import umc.server.baeksstreetmapserver.user.dto.response.NicknameDuplicateCheckResponse;
 import umc.server.baeksstreetmapserver.user.service.UserService;
 
 @RequiredArgsConstructor
@@ -28,6 +29,13 @@ public class UserController {
 	public ResponseEntity<EmailDuplicateCheckResponse> emailDuplicateCheck(@PathVariable String email) {
 		EmailDuplicateCheckResponse response
 			= EmailDuplicateCheckResponse.of(userService.emailDuplicateCheck(email));
+		return ResponseEntity.ok(response);
+	}
+
+	@GetMapping("/nickname/{nickname}")
+	public ResponseEntity<NicknameDuplicateCheckResponse> nicknameDuplicateCheck(@PathVariable String nickname) {
+		NicknameDuplicateCheckResponse response
+			= NicknameDuplicateCheckResponse.of(userService.nicknameDuplicateCheck(nickname));
 		return ResponseEntity.ok(response);
 	}
 
