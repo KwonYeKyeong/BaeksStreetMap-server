@@ -33,8 +33,4 @@ public class ReviewController {
         DeleteReviewResponse response = reviewService.deleteReview(reviewIdx);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
-
-
-
 }
