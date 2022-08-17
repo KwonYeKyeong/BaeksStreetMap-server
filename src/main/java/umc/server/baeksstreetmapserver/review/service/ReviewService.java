@@ -18,6 +18,7 @@ import umc.server.baeksstreetmapserver.store.entity.Store;
 import umc.server.baeksstreetmapserver.store.repository.MenuRepository;
 import umc.server.baeksstreetmapserver.store.repository.StoreRepository;
 
+
 import java.util.List;
 
 
@@ -34,6 +35,7 @@ public class ReviewService {
     private final ReportRepository reportRepository;
 
     @Transactional
+
     public RegisterReviewResponse registerReview(Long storeIdx, RegisterReviewRequest request) {
 
         Menu menu = menuRepository.findById(request.getBestMenu()).get();
