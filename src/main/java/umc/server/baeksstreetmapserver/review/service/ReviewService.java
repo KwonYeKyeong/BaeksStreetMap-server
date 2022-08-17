@@ -18,7 +18,9 @@ import umc.server.baeksstreetmapserver.store.entity.Store;
 import umc.server.baeksstreetmapserver.store.repository.MenuRepository;
 import umc.server.baeksstreetmapserver.store.repository.StoreRepository;
 
+
 import java.util.List;
+
 
 
 @Transactional(readOnly = true)
@@ -31,6 +33,7 @@ public class ReviewService {
     private final StoreRepository storeRepository;
     private final KeywordRepository keywordRepository;
     private final ReviewKeywordRepository reviewKeywordRepository;
+
     private final ReportRepository reportRepository;
 
     @Transactional

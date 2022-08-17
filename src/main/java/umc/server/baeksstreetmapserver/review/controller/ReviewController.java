@@ -22,6 +22,7 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+
     @PatchMapping("/{reviewIdx}")
     public ResponseEntity<ModifyReviewResponse> modifyReview(@PathVariable Long reviewIdx, @RequestBody ModifyReviewRequest request) {
         ModifyReviewResponse response = reviewService.modifyReview(reviewIdx, request);
@@ -39,7 +40,6 @@ public class ReviewController {
         ReportReviewResponse response = reviewService.reportReview(reviewIdx, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
 
 
 

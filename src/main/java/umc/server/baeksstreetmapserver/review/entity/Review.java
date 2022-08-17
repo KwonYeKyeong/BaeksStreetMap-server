@@ -50,6 +50,7 @@ public class Review extends BaseEntity {
     private Store store;
 
 
+
     /* likes, changes, text, menu_idx만 수정 가능*/
     public void modify(Boolean likes, Long changes, String text, Menu menu){
         this.likes = likes;
@@ -58,9 +59,11 @@ public class Review extends BaseEntity {
         this.menu = menu;
     }
 
+
     public void delete() {
         this.status = Status.INACTIVE;
     }
+
 
     @Builder
     public Review(Long idx, boolean likes, Long changes, String text, Menu menu, Status status, Store store) {
