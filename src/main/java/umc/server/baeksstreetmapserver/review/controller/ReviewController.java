@@ -30,5 +30,4 @@ public class ReviewController {
         ModifyReviewResponse response = reviewService.modifyReview(reviewIdx, request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
-
 }

@@ -7,21 +7,22 @@ import org.springframework.transaction.annotation.Transactional;
 import umc.server.baeksstreetmapserver.review.dto.ReviewDto;
 import umc.server.baeksstreetmapserver.review.entity.Keyword;
 import umc.server.baeksstreetmapserver.review.entity.Review;
+import umc.server.baeksstreetmapserver.review.repository.KeywordRepository;
 import umc.server.baeksstreetmapserver.review.repository.ReviewKeywordRepository;
 import umc.server.baeksstreetmapserver.review.repository.ReviewRepository;
 import umc.server.baeksstreetmapserver.store.dto.response.StoreBriefInfoResponse;
 import umc.server.baeksstreetmapserver.store.dto.response.StoreDetailInfoResponse;
 import umc.server.baeksstreetmapserver.store.dto.response.StoreInBoundaryResponse;
+import umc.server.baeksstreetmapserver.store.dto.response.StoreSearchResponse;
 import umc.server.baeksstreetmapserver.store.entity.Menu;
+import umc.server.baeksstreetmapserver.store.entity.Region;
 import umc.server.baeksstreetmapserver.store.entity.Store;
 import umc.server.baeksstreetmapserver.store.exception.StoreNotFoundException;
 import umc.server.baeksstreetmapserver.store.mapper.StoreMapper;
 import umc.server.baeksstreetmapserver.store.repository.MenuRepository;
 import umc.server.baeksstreetmapserver.store.repository.StoreRepository;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
@@ -33,6 +34,7 @@ public class StoreService {
 	private final ReviewRepository reviewRepository;
 	private final MenuRepository menuRepository;
 	private final ReviewKeywordRepository reviewKeywordRepository;
+	private final KeywordRepository keywordRepository;
 
 	private final StoreMapper storeMapper = Mappers.getMapper(StoreMapper.class);
 
@@ -90,6 +92,40 @@ public class StoreService {
 		}
 
 		return StoreDetailInfoResponse.of(store, Math.round((float) likesCnt / totalCnt * 100), menuList, reviewDtoList);
+	}
+
+	public List<StoreSearchResponse> search(String query, List<Long> keyword, List<Region> region) {
+		Set<Store> storeSet = new HashSet<>();
+		if (query != null) {
+			String[] searchWords = query.split(" ");
+			for (String word : searchWords) {
+				storeRepository.findDistinctByNameContains(word).stream().forEach(storeSet::add);
+			}
+		}
+		if (keyword != null) {
+			List<Keyword> keywordList = keywordRepository.findIn(keyword);
+			List<Review> reviewList = reviewKeywordRepository.findReviewsIn(keywordList);
+			for (Review review : reviewList) {
+				storeSet.add(review.getStore());
+			}
+		}
+		if (region != null) {
+			storeRepository.findByRegionIn(region).stream().forEach(storeSet::add);
+		}
+
+		List<StoreSearchResponse> response = new ArrayList<>();
+		for (Store store : storeSet) {
+			// 좋아요(%)
+			Long totalCnt = reviewRepository.countByStore(store);
+			Long likesCnt = reviewRepository.countByStoreAndLikes(store);
+
+			// 메뉴 목록
+			List<Menu> menuList = menuRepository.findByStore(store);
+
+			response.add(StoreSearchResponse.of(store, Math.round((float) likesCnt / totalCnt * 100), menuList));
+		}
+
+		return response;
 	}
 
 }
