@@ -68,6 +68,10 @@ public class ReviewService {
     @Transactional
     public DeleteReviewResponse deleteReview(Long reviewIdx) {
         Review review = reviewRepository.findById(reviewIdx).get();
+        List<ReviewKeyword> keywordList = reviewKeywordRepository.findKeywordByReview(review);
+        for(ReviewKeyword reviewKeyword : keywordList) {
+            reviewKeywordRepository.delete(reviewKeyword);
+        }
         review.delete();
         return new DeleteReviewResponse(reviewIdx, review.getStatus());
     }
