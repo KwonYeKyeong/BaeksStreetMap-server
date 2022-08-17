@@ -21,4 +21,5 @@ public interface ReviewKeywordRepository extends JpaRepository<ReviewKeyword, Lo
 	List<Review> findReviewsIn(List<Keyword> keywordList);
 
 
+	List<ReviewKeyword> findKeywordByReview(Review review);
 }
