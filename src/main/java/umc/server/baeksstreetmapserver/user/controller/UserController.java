@@ -17,7 +17,7 @@ public class UserController {
 
 	private final UserService userService;
 
-	@GetMapping("/{loginId}")
+	@GetMapping("/loginId/{loginId}")
 	public ResponseEntity<LoginIdDuplicateCheckResponse> loginIdDuplicateCheck(@PathVariable String loginId) {
 		LoginIdDuplicateCheckResponse response
 			= LoginIdDuplicateCheckResponse.of(userService.loginIdDuplicateCheck(loginId));
