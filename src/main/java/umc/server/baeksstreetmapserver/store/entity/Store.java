@@ -1,6 +1,7 @@
 package umc.server.baeksstreetmapserver.store.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import umc.server.baeksstreetmapserver.common.BaseEntity;
@@ -42,10 +43,23 @@ public class Store extends BaseEntity {
 	@Column(nullable = false)
 	private Status status;
 
-	@Column(nullable = false)
 	private String image;
 
 	@Column(nullable = false)
 	private String video;
+
+	@Builder
+	public Store(String name, String address, double latitude, double longitude,
+				 String introduce, Region region, Status status, String image, String video) {
+		this.name = name;
+		this.address = address;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.introduce = introduce;
+		this.region = region;
+		this.status = status;
+		this.image = image;
+		this.video = video;
+	}
 
 }
