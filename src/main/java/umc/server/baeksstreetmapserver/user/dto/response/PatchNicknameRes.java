@@ -1,4 +1,4 @@
-package umc.server.baeksstreetmapserver.user.dto;
+package umc.server.baeksstreetmapserver.user.dto.response;
 
 
 import lombok.AllArgsConstructor;

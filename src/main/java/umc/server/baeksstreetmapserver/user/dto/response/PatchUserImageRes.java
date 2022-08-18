@@ -1,4 +1,4 @@
-package umc.server.baeksstreetmapserver.user.dto;
+package umc.server.baeksstreetmapserver.user.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PatchUserStatusRes {
+public class PatchUserImageRes {
 
     private String result;
 }

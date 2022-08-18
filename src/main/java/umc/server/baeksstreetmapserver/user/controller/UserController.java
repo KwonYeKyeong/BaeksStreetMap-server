@@ -1,18 +1,22 @@
 package umc.server.baeksstreetmapserver.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import umc.server.baeksstreetmapserver.user.dto.*;
 import umc.server.baeksstreetmapserver.user.dto.request.*;
+import umc.server.baeksstreetmapserver.user.dto.response.*;
 import umc.server.baeksstreetmapserver.user.service.UserService;
+import umc.server.baeksstreetmapserver.utils.JwtService;
 
 import java.util.regex.Pattern;
 
 import static umc.server.baeksstreetmapserver.utils.ValidationRegex.isRegexEmail;
 
 import javax.validation.Valid;
+
+@Validated
 @RequiredArgsConstructor
 @RequestMapping(value = "/users")
 @RestController
@@ -59,12 +63,6 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-	@GetMapping("/loginId/{loginId}")
-	public ResponseEntity<LoginIdDuplicateCheckResponse> loginIdDuplicateCheck(@PathVariable String loginId) {
-		LoginIdDuplicateCheckResponse response
-			= LoginIdDuplicateCheckResponse.of(userService.loginIdDuplicateCheck(loginId));
-		return ResponseEntity.ok(response);
-	}
 
     //로그인
     @PostMapping("/login")
@@ -172,6 +170,14 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+    
+    @GetMapping("/loginId/{loginId}")
+    public ResponseEntity<LoginIdDuplicateCheckResponse> loginIdDuplicateCheck(@PathVariable String loginId) {
+        LoginIdDuplicateCheckResponse response
+            = LoginIdDuplicateCheckResponse.of(userService.loginIdDuplicateCheck(loginId));
+        return ResponseEntity.ok(response);
+    }
+
 	@GetMapping("/email/{email}")
 	public ResponseEntity<EmailDuplicateCheckResponse> emailDuplicateCheck(@PathVariable String email) {
 		EmailDuplicateCheckResponse response

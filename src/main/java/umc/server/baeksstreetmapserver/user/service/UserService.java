@@ -4,17 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.server.baeksstreetmapserver.user.dto.request.*;
+import umc.server.baeksstreetmapserver.user.dto.response.*;
 import umc.server.baeksstreetmapserver.user.repository.UserRepository;
 import umc.server.baeksstreetmapserver.common.Status;
-import umc.server.baeksstreetmapserver.user.dto.PostLoginReq;
-import umc.server.baeksstreetmapserver.user.dto.PostLoginRes;
-import umc.server.baeksstreetmapserver.user.dto.PostUserReq;
-import umc.server.baeksstreetmapserver.user.dto.PostUserRes;
 import umc.server.baeksstreetmapserver.user.entity.User;
 import umc.server.baeksstreetmapserver.utils.JwtService;
 import umc.server.baeksstreetmapserver.utils.SHA256;
 
-import java.time.LocalDateTime;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
