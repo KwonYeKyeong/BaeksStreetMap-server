@@ -17,6 +17,9 @@ import umc.server.baeksstreetmapserver.store.entity.Menu;
 import umc.server.baeksstreetmapserver.store.entity.Store;
 import umc.server.baeksstreetmapserver.store.repository.MenuRepository;
 import umc.server.baeksstreetmapserver.store.repository.StoreRepository;
+import umc.server.baeksstreetmapserver.user.entity.User;
+import umc.server.baeksstreetmapserver.user.repository.UserRepository;
+import umc.server.baeksstreetmapserver.utils.JwtService;
 
 
 import java.util.List;
@@ -33,16 +36,22 @@ public class ReviewService {
     private final KeywordRepository keywordRepository;
     private final ReviewKeywordRepository reviewKeywordRepository;
     private final ReportRepository reportRepository;
+    private final UserRepository userRepository;
+    private final JwtService jwtService;
 
     @Transactional
 
-    public RegisterReviewResponse registerReview(Long storeIdx, RegisterReviewRequest request) {
+    public RegisterReviewResponse registerReview(Long storeIdx, RegisterReviewRequest request) throws Exception {
 
         Menu menu = menuRepository.findById(request.getBestMenu()).get();
         Store store = storeRepository.findById(storeIdx).get();
 
+        // jwt로 유저객체 가져오기
+        Long userIdxByJwt = jwtService.getUserIdx();
+        User user = userRepository.findById(userIdxByJwt).get();
+
         // dto(데이터-전달-객체)를 entity(db-저장-객체)로 변경
-        Review review = request.reviewToEntity(menu, store);
+        Review review = request.reviewToEntity(menu, store, user);
 
         // 리파지터리에게(db-관리-객체) 전달
         Review saved = reviewRepository.save(review);

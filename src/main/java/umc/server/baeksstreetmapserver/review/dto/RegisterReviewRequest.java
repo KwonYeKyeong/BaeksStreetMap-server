@@ -13,6 +13,7 @@ import umc.server.baeksstreetmapserver.review.entity.Review;
 import umc.server.baeksstreetmapserver.review.entity.ReviewKeyword;
 import umc.server.baeksstreetmapserver.store.entity.Menu;
 import umc.server.baeksstreetmapserver.store.entity.Store;
+import umc.server.baeksstreetmapserver.user.entity.User;
 
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class RegisterReviewRequest {
     }
 
     //dto -> entity
-    public Review reviewToEntity(Menu menu, Store store) {
+    public Review reviewToEntity(Menu menu, Store store, User user) {
         return Review.builder()
                 .likes(like.equals("Y") ? true : false)
                 .changes(change)
@@ -48,6 +49,7 @@ public class RegisterReviewRequest {
                 .menu(menu)
                 .status(Status.ACTIVE)
                 .store(store)
+                .user(user)
                 .build();
 
     }
