@@ -9,6 +9,7 @@ import umc.server.baeksstreetmapserver.store.entity.Store;
 import umc.server.baeksstreetmapserver.user.entity.User;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -72,6 +73,10 @@ public class Review extends BaseEntity {
         this.status = status;
         this.store = store;
         this.user = user;
+    }
+
+    public boolean isWrittenBy(Long userIdx) {
+        return Objects.equals(this.user.getIdx(), userIdx);
     }
 
 }

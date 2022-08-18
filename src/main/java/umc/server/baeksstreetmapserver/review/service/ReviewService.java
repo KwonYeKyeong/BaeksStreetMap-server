@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.server.baeksstreetmapserver.common.Status;
+import umc.server.baeksstreetmapserver.common.error.exception.UserAccessDeniedException;
 import umc.server.baeksstreetmapserver.review.dto.*;
 import umc.server.baeksstreetmapserver.review.entity.Keyword;
 import umc.server.baeksstreetmapserver.review.entity.Report;
@@ -22,6 +23,7 @@ import umc.server.baeksstreetmapserver.user.repository.UserRepository;
 import umc.server.baeksstreetmapserver.utils.JwtService;
 
 
+import java.text.MessageFormat;
 import java.util.List;
 
 
@@ -72,11 +74,17 @@ public class ReviewService {
 
 
     @Transactional
-    public ModifyReviewResponse modifyReview(Long reviewIdx, ModifyReviewRequest request) {
+    public ModifyReviewResponse modifyReview(Long reviewIdx, ModifyReviewRequest request) throws Exception {
 
         Review review = reviewRepository.findById(reviewIdx).get();
         Menu menu = menuRepository.findById(request.getBestMenu()).get();
-        // 기존의 keyword 삭제
+        Long userIdxByJwt = jwtService.getUserIdx();
+
+        // 자신이 작성한 리뷰만 수정 가능
+        if (!review.isWrittenBy(userIdxByJwt)) {
+            throw new UserAccessDeniedException(MessageFormat.format("리뷰 작성자가 아닙니다. userId = {0}", userIdxByJwt));
+        }
+
         List<ReviewKeyword> reviewKeywordList = reviewKeywordRepository.findByReview(review);
         for(ReviewKeyword reviewKeyword : reviewKeywordList) {
             reviewKeywordRepository.delete(reviewKeyword);
@@ -97,9 +105,16 @@ public class ReviewService {
 
 
     @Transactional
-    public DeleteReviewResponse deleteReview(Long reviewIdx) {
+    public DeleteReviewResponse deleteReview(Long reviewIdx) throws Exception {
         Review review = reviewRepository.findById(reviewIdx).get();
         List<ReviewKeyword> keywordList = reviewKeywordRepository.findByReview(review);
+        Long userIdxByJwt = jwtService.getUserIdx();
+
+        // 자신이 작성한 리뷰만 삭제 가능
+        if (!review.isWrittenBy(userIdxByJwt)) {
+            throw new UserAccessDeniedException(MessageFormat.format("리뷰 작성자가 아닙니다. userId = {0}", userIdxByJwt));
+        }
+
         for(ReviewKeyword reviewKeyword : keywordList) {
             reviewKeywordRepository.delete(reviewKeyword);
         }
