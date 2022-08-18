@@ -2,14 +2,17 @@ package umc.server.baeksstreetmapserver.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import umc.server.baeksstreetmapserver.user.dto.*;
+import umc.server.baeksstreetmapserver.user.dto.request.*;
 import umc.server.baeksstreetmapserver.user.service.UserService;
 
 import java.util.regex.Pattern;
 
 import static umc.server.baeksstreetmapserver.utils.ValidationRegex.isRegexEmail;
 
+import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping(value = "/users")
 @RestController
@@ -18,19 +21,14 @@ public class UserController {
     private final JwtService jwtService;
 
     //회원가입
-    @ResponseBody
     @PostMapping("")
-    public ResponseEntity<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
+    public ResponseEntity<PostUserRes> createUser(@Valid @RequestBody PostUserReq postUserReq) {
         //아이디
         //숫자와 알파벳만 가능
         //4글자 이상만 가능
         boolean isRegexId = Pattern.matches("^[a-zA-Z0-9]*$", postUserReq.getLoginId());
         if(!isRegexId){
             //숫자와 소문자, 대문자로 입력해주세요
-            return ResponseEntity.notFound().build();
-        }
-        if(postUserReq.getLoginId().length() < 5) {
-            //4글자 이상 입력해주세요
             return ResponseEntity.notFound().build();
         }
 
@@ -49,18 +47,8 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
 
-        //닉네임 1~10글자
-        if(postUserReq.getNickName().length() < 1 || postUserReq.getNickName().length() > 10){
-            return ResponseEntity.notFound().build();
-        }
-
         // 이메일 정규표현
         if(!isRegexEmail(postUserReq.getEmail())){
-            return ResponseEntity.notFound().build();
-        }
-
-        // 이메일이 비어있는지 확인
-        if(postUserReq.getEmail() == null){
             return ResponseEntity.notFound().build();
         }
 
@@ -79,7 +67,6 @@ public class UserController {
 	}
 
     //로그인
-    @ResponseBody
     @PostMapping("/login")
     public ResponseEntity<PostLoginRes> logIn(@RequestBody PostLoginReq postLoginReq) {
         try {
@@ -151,7 +138,7 @@ public class UserController {
 
     //프로필 사진 변경
     @ResponseBody
-    @PatchMapping("/{userIdx}/image") // (PATCH) 127.0.0.1:9000/users/:userIdx
+    @PatchMapping("/{userIdx}/image")
     public ResponseEntity<PatchUserImageRes> modifyUserImage(@PathVariable("userIdx") Long userIdx, @RequestBody PatchUserImageReq patchUserImageReq){
         try {
             Long userIdxByJwt = jwtService.getUserIdx();

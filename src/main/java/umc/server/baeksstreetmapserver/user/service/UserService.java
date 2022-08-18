@@ -44,7 +44,7 @@ public class UserService {
             user.setLoginId(postUserReq.getLoginId());
             user.setEmail(postUserReq.getEmail());
             user.setPassword(postUserReq.getPassword());
-            user.setNickname(postUserReq.getNickName());
+            user.setNickname(postUserReq.getNickname());
             user.setStatus(Status.ACTIVE);
 
             userRepository.save(user);
