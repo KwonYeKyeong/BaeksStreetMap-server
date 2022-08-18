@@ -37,8 +37,7 @@ public class Review extends BaseEntity {
     private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_idx")
-    //@JoinColumn(name = "user_idx", nullable = false)
+    @JoinColumn(name = "user_idx", nullable = false)
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -65,13 +64,14 @@ public class Review extends BaseEntity {
     }
 
     @Builder
-    public Review(boolean likes, Long changes, String text, Menu menu, Status status, Store store) {
+    public Review(boolean likes, Long changes, String text, Menu menu, Status status, Store store, User user) {
         this.likes = likes;
         this.changes = changes;
         this.text = text;
         this.menu = menu;
         this.status = status;
         this.store = store;
+        this.user = user;
     }
 
 }

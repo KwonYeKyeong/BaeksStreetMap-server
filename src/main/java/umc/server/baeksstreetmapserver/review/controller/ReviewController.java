@@ -17,7 +17,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public ResponseEntity<RegisterReviewResponse> registerReview(@RequestParam Long storeIdx, @RequestBody RegisterReviewRequest request) {
+    public ResponseEntity<RegisterReviewResponse> registerReview(@RequestParam Long storeIdx, @RequestBody RegisterReviewRequest request) throws Exception {
         RegisterReviewResponse response = reviewService.registerReview(storeIdx, request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
