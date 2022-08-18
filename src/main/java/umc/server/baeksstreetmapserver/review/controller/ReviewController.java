@@ -23,14 +23,14 @@ public class ReviewController {
     }
 
     @PatchMapping("/{reviewIdx}")
-    public ResponseEntity<ModifyReviewResponse> modifyReview(@PathVariable Long reviewIdx, @RequestBody ModifyReviewRequest request) {
+    public ResponseEntity<ModifyReviewResponse> modifyReview(@PathVariable Long reviewIdx, @RequestBody ModifyReviewRequest request) throws Exception {
         ModifyReviewResponse response = reviewService.modifyReview(reviewIdx, request);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 
     @PatchMapping("/{reviewIdx}/status")
-    public ResponseEntity<DeleteReviewResponse> deleteReview(@PathVariable Long reviewIdx) {
+    public ResponseEntity<DeleteReviewResponse> deleteReview(@PathVariable Long reviewIdx) throws Exception {
         DeleteReviewResponse response = reviewService.deleteReview(reviewIdx);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
