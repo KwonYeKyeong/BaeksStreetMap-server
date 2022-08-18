@@ -3,6 +3,8 @@ package umc.server.baeksstreetmapserver.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import umc.server.baeksstreetmapserver.user.dto.request.*;
+import umc.server.baeksstreetmapserver.user.repository.UserRepository;
 import umc.server.baeksstreetmapserver.common.Status;
 import umc.server.baeksstreetmapserver.user.dto.PostLoginReq;
 import umc.server.baeksstreetmapserver.user.dto.PostLoginRes;

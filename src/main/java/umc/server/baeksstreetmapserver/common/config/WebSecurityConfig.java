@@ -1,4 +1,4 @@
-package umc.server.baeksstreetmapserver;
+package umc.server.baeksstreetmapserver.common.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,8 +16,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/users/**").permitAll()
                 .anyRequest().authenticated();
-
-
-
     }
 }
