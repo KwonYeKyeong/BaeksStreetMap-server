@@ -46,8 +46,6 @@ public class UserService {
             user.setPassword(postUserReq.getPassword());
             user.setNickname(postUserReq.getNickName());
             user.setStatus(Status.ACTIVE);
-            user.setCreatedAt(LocalDateTime.now());
-            user.setUpdatedAt(LocalDateTime.now());
 
             userRepository.save(user);
 
