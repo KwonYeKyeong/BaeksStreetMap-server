@@ -1,6 +1,7 @@
 package umc.server.baeksstreetmapserver.store.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import umc.server.baeksstreetmapserver.common.BaseEntity;
@@ -29,5 +30,13 @@ public class Menu extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "store_idx", nullable = false)
 	private Store store;
+
+	@Builder
+	public Menu(String name, String image, Status status, Store store) {
+		this.name = name;
+		this.image = image;
+		this.status = status;
+		this.store = store;
+	}
 
 }

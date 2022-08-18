@@ -22,9 +22,7 @@ public class Keyword {
     @Column
     private String keyword;
 
-    @Builder
-    public Keyword(Long idx, String keyword) {
-        this.idx = idx;
+    public Keyword(String keyword) {
         this.keyword = keyword;
     }
 }
