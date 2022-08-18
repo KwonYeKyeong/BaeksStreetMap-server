@@ -114,10 +114,14 @@ public class UserService {
             throw new Exception("DATABASE_ERROR");
         }
     }
+
     @Transactional
     public PatchNicknameRes modifyUserNickname(Long userIdx, PatchNicknameReq patchNicknameReq) throws Exception {
         try{
-            //중복 로직 필요(기존에 닉네임이 존재하는지)
+            if (nicknameDuplicateCheck(patchNicknameReq.getNickname())) {
+                return new PatchNicknameRes("닉네임 변경이 불가능합니다.(닉네임 중복)");
+            }
+
             User user = userRepository.findById(userIdx).get();
             user.setNickname(patchNicknameReq.getNickname());
 
