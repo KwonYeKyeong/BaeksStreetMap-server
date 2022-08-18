@@ -4,10 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.server.baeksstreetmapserver.common.Status;
-import umc.server.baeksstreetmapserver.review.dto.ModifyReviewRequest;
-import umc.server.baeksstreetmapserver.review.dto.ModifyReviewResponse;
-import umc.server.baeksstreetmapserver.review.dto.RegisterReviewRequest;
-import umc.server.baeksstreetmapserver.review.dto.RegisterReviewResponse;
+
+
+import umc.server.baeksstreetmapserver.review.dto.*;
+
+
 import umc.server.baeksstreetmapserver.review.entity.Keyword;
 import umc.server.baeksstreetmapserver.review.entity.Review;
 import umc.server.baeksstreetmapserver.review.entity.ReviewKeyword;
@@ -61,13 +62,14 @@ public class ReviewService {
         return new RegisterReviewResponse(review.getIdx());
     }
 
+
     @Transactional
     public ModifyReviewResponse modifyReview(Long reviewIdx, ModifyReviewRequest request) {
 
         Review review = reviewRepository.findById(reviewIdx).get();
         Menu menu = menuRepository.findById(request.getBestMenu()).get();
         // 기존의 keyword 삭제
-        List<ReviewKeyword> reviewKeywordList = reviewKeywordRepository.findByReview(review);
+        List<ReviewKeyword> reviewKeywordList = reviewKeywordRepository.findKeywordByReview(review);
         for(ReviewKeyword reviewKeyword : reviewKeywordList) {
             reviewKeywordRepository.delete(reviewKeyword);
         }
@@ -84,4 +86,18 @@ public class ReviewService {
         review.modify(request.getLike().equals("Y") ? true : false, request.getChange(), request.getReviewText(), menu);
         return new ModifyReviewResponse(reviewIdx, review.getUpdatedAt());
     }
+
+
+    @Transactional
+    public DeleteReviewResponse deleteReview(Long reviewIdx) {
+        Review review = reviewRepository.findById(reviewIdx).get();
+        List<ReviewKeyword> keywordList = reviewKeywordRepository.findKeywordByReview(review);
+        for(ReviewKeyword reviewKeyword : keywordList) {
+            reviewKeywordRepository.delete(reviewKeyword);
+        }
+        review.delete();
+        return new DeleteReviewResponse(reviewIdx, review.getStatus());
+    }
+
+
 }
