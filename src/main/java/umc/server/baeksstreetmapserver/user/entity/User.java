@@ -14,7 +14,7 @@ import javax.persistence.*;
 public class User extends BaseEntity {
 
     private static final int MAX_NAME_LENGTH = 30;
-    private static final int MAX_PASSWORD_LENGTH = 30;
+    //private static final int MAX_PASSWORD_LENGTH = 30;
     private static final int MAX_ID_LENGTH = 20;
 
     @Id
@@ -28,7 +28,8 @@ public class User extends BaseEntity {
     @Column(name = "login_id", nullable = false, length = MAX_ID_LENGTH,unique = true)
     private String loginId;
 
-    @Column(name = "password", nullable = false, length = MAX_PASSWORD_LENGTH)
+    @Lob
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "nickname", nullable = false, length = MAX_NAME_LENGTH, unique = true)

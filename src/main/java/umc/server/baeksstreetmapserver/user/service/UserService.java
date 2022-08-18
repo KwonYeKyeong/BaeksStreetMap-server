@@ -3,16 +3,160 @@ package umc.server.baeksstreetmapserver.user.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import umc.server.baeksstreetmapserver.common.Status;
+import umc.server.baeksstreetmapserver.user.dto.PostLoginReq;
+import umc.server.baeksstreetmapserver.user.dto.PostLoginRes;
+import umc.server.baeksstreetmapserver.user.dto.PostUserReq;
+import umc.server.baeksstreetmapserver.user.dto.PostUserRes;
+import umc.server.baeksstreetmapserver.user.entity.User;
 import umc.server.baeksstreetmapserver.user.repository.UserRepository;
 
+import java.time.LocalDateTime;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class UserService {
 
-	private final UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final JwtService jwtService;
 
-	public boolean loginIdDuplicateCheck(String loginId) {
+    @Transactional
+    public PostUserRes createUser(PostUserReq postUserReq) throws Exception {
+        // 이메일 중복 확인
+//        if(checkEmail(postUserReq.getEmail()) == 1){
+//            throw new Exception("POST_USERS_EXISTS_EMAIL");
+//        }
+
+        String pwd;
+        try{
+            //암호화
+            pwd = new SHA256().encrypt(postUserReq.getPassword());
+            postUserReq.setPassword(pwd);
+        } catch (Exception ignored) {
+
+            throw new Exception("비밀번호 암호화 오류");
+        }
+        try{
+            User user = new User();
+            user.setLoginId(postUserReq.getLoginId());
+            user.setEmail(postUserReq.getEmail());
+            user.setPassword(postUserReq.getPassword());
+            user.setNickname(postUserReq.getNickName());
+            user.setStatus(Status.ACTIVE);
+            user.setCreatedAt(LocalDateTime.now());
+            user.setUpdatedAt(LocalDateTime.now());
+
+            userRepository.save(user);
+
+            String result = "회원 가입을 성공했습니다";
+
+            return new PostUserRes(result);
+        } catch (Exception exception) {
+            throw new Exception("데이터베이스 오류");
+        }
+    }
+
+    public int checkEmail(String email) throws Exception{
+        try{
+            User user = userRepository.checkEmail(email);
+            if (user != null){
+                return 1;
+            }
+            else {
+                return 0;
+            }
+        } catch (Exception exception){
+            throw new Exception("데이터베이스 오류");
+        }
+    }
+
+
+    //회원가입 비밀번호 암호화 로직 필요함
+    public PostLoginRes logIn(PostLoginReq postLoginReq) throws Exception{
+
+        User user = userRepository.findByLoginId(postLoginReq.getLoginId());
+        String encryptPwd;
+
+        //status 밸리데이션
+        if (user.getStatus() == Status.INACTIVE) {
+            throw new Exception("비활성화된 회원입니다.");
+        }
+
+        try {
+            encryptPwd = new SHA256().encrypt(postLoginReq.getPassword());
+        }
+        catch (Exception exception) {
+            throw new Exception("비밀번호 암호화 오류");
+        }
+
+        if (user.getPassword().equals(encryptPwd)) {
+
+            Long userIdx = user.getIdx();
+            String jwt = jwtService.createJwt(userIdx);
+            String nickName = user.getNickname();
+            //jwt는 헤더에 넘겨야하는건데 이렇게 넘겨도 되나요?
+            return new PostLoginRes(userIdx, jwt, nickName);
+        }
+        else
+            throw new Exception("비밀번호가 일치하지 않습니다.");
+    }
+
+
+    @Transactional
+    public PatchPasswordRes modifyUserPassword(Long userIdx, PatchPasswordReq patchPasswordReq) throws Exception {
+        try{
+            //기존 비밀번호하고 일치하는지 확인
+            User user = userRepository.findOne(userIdx);
+            if (user.getPassword() != patchPasswordReq.getPassword()) {
+                throw new Exception("비밀번호가 일치하지 않습니다.");
+            }
+            user.setPassword(patchPasswordReq.getNewPassword());
+            return new PatchPasswordRes("비밀번호 변경을 성공했습니다");
+
+        } catch(Exception exception){
+            throw new Exception("DATABASE_ERROR");
+        }
+    }
+    @Transactional
+    public PatchNicknameRes modifyUserNickname(Long userIdx, PatchNicknameReq patchNicknameReq) throws Exception {
+        try{
+            //중복 로직 필요(기존에 닉네임이 존재하는지)
+            User user = userRepository.findOne(userIdx);
+            user.setNickname(patchNicknameReq.getNickname());
+
+            return new PatchNicknameRes("닉네임 변경을 성공했습니다");
+
+        } catch(Exception exception){
+            throw new Exception("DATABASE_ERROR");
+        }
+    }
+
+    @Transactional
+    public PatchUserImageRes modifyUserImage(Long userIdx, PatchUserImageReq patchUserImageReq) throws Exception {
+        try{
+            User user = userRepository.findOne(userIdx);
+            user.setImage(patchUserImageReq.getImage());
+
+            return new PatchUserImageRes("프로필 사진 변경을 성공했습니다");
+
+        } catch(Exception exception){
+            throw new Exception("DATABASE_ERROR");
+        }
+    }
+
+    @Transactional
+    public PatchUserStatusRes modifyUserStatus(Long userIdx) throws Exception {
+        try{
+            User user = userRepository.findOne(userIdx);
+            user.setStatus(Status.INACTIVE);
+            return new PatchUserStatusRes("회원 탈퇴를 성공했습니다");
+
+        } catch(Exception exception){
+            throw new Exception("DATABASE_ERROR");
+        }
+    }
+
+    public boolean loginIdDuplicateCheck(String loginId) {
 		return userRepository.existsByLoginId(loginId);
 	}
 
@@ -23,5 +167,5 @@ public class UserService {
 	public boolean nicknameDuplicateCheck(String nickname) {
 		return userRepository.existsByNickname(nickname);
 	}
-
+    
 }
