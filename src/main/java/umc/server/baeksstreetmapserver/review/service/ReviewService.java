@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.server.baeksstreetmapserver.common.Status;
+import umc.server.baeksstreetmapserver.review.dto.ModifyReviewRequest;
+import umc.server.baeksstreetmapserver.review.dto.ModifyReviewResponse;
 import umc.server.baeksstreetmapserver.review.dto.RegisterReviewRequest;
 import umc.server.baeksstreetmapserver.review.dto.RegisterReviewResponse;
 import umc.server.baeksstreetmapserver.review.entity.Keyword;
@@ -18,6 +20,10 @@ import umc.server.baeksstreetmapserver.store.repository.MenuRepository;
 import umc.server.baeksstreetmapserver.store.repository.StoreRepository;
 
 
+import java.util.List;
+
+
+
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
@@ -30,7 +36,7 @@ public class ReviewService {
     private final ReviewKeywordRepository reviewKeywordRepository;
 
     @Transactional
-    public RegisterReviewResponse registerReview (Long storeIdx, RegisterReviewRequest request) {
+    public RegisterReviewResponse registerReview(Long storeIdx, RegisterReviewRequest request) {
 
         Menu menu = menuRepository.findById(request.getBestMenu()).get();
         Store store = storeRepository.findById(storeIdx).get();
@@ -53,5 +59,29 @@ public class ReviewService {
             reviewKeywordRepository.save(reviewKeyword);
         }
         return new RegisterReviewResponse(review.getIdx());
+    }
+
+    @Transactional
+    public ModifyReviewResponse modifyReview(Long reviewIdx, ModifyReviewRequest request) {
+
+        Review review = reviewRepository.findById(reviewIdx).get();
+        Menu menu = menuRepository.findById(request.getBestMenu()).get();
+        // 기존의 keyword 삭제
+        List<ReviewKeyword> reviewKeywordList = reviewKeywordRepository.findByReview(review);
+        for(ReviewKeyword reviewKeyword : reviewKeywordList) {
+            reviewKeywordRepository.delete(reviewKeyword);
+        }
+
+        // 요청으로 받은 keyword 등록
+        for(Long keywordIdx : request.getKeyword()) {
+            Keyword keyword = keywordRepository.findById(keywordIdx).get();
+            ReviewKeyword reviewKeyword = ReviewKeyword.builder()
+                    .review(review)
+                    .keyword(keyword)
+                    .build();
+            reviewKeywordRepository.save(reviewKeyword);
+        }
+        review.modify(request.getLike().equals("Y") ? true : false, request.getChange(), request.getReviewText(), menu);
+        return new ModifyReviewResponse(reviewIdx, review.getUpdatedAt());
     }
 }

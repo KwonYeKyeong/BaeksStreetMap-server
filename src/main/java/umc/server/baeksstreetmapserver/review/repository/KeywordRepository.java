@@ -11,4 +11,5 @@ public interface KeywordRepository extends JpaRepository<Keyword, Long> {
 	@Query("SELECT k FROM Keyword k WHERE k.idx in :idxList")
 	List<Keyword> findIn(List<Long> idxList);
 
+
 }
