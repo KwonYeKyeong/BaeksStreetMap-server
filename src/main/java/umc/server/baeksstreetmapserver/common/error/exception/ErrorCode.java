@@ -16,6 +16,8 @@ public enum ErrorCode {
 	HANDLE_ACCESS_DENIED(403, "Access is Denied"),
 
 	// User
+	LOGIN_ID_DUPLICATION(400, "Login Id is Duplicated"),
+	NICKNAME_DUPLICATION(400, "Nickname is Duplicated"),
 	EMAIL_DUPLICATION(400, "Email is Duplication"),
 	LOGIN_INPUT_INVALID(400, "Login input is invalid");
 
