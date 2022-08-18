@@ -9,7 +9,8 @@ import umc.server.baeksstreetmapserver.user.dto.PostLoginRes;
 import umc.server.baeksstreetmapserver.user.dto.PostUserReq;
 import umc.server.baeksstreetmapserver.user.dto.PostUserRes;
 import umc.server.baeksstreetmapserver.user.entity.User;
-import umc.server.baeksstreetmapserver.user.repository.UserRepository;
+import umc.server.baeksstreetmapserver.utils.JwtService;
+import umc.server.baeksstreetmapserver.utils.SHA256;
 
 import java.time.LocalDateTime;
 @Transactional(readOnly = true)
@@ -58,7 +59,7 @@ public class UserService {
 
     public int checkEmail(String email) throws Exception{
         try{
-            User user = userRepository.checkEmail(email);
+            User user = userRepository.findByEmail(email);
             if (user != null){
                 return 1;
             }
@@ -106,7 +107,7 @@ public class UserService {
     public PatchPasswordRes modifyUserPassword(Long userIdx, PatchPasswordReq patchPasswordReq) throws Exception {
         try{
             //기존 비밀번호하고 일치하는지 확인
-            User user = userRepository.findOne(userIdx);
+            User user = userRepository.findById(userIdx).get();
             if (user.getPassword() != patchPasswordReq.getPassword()) {
                 throw new Exception("비밀번호가 일치하지 않습니다.");
             }
@@ -121,7 +122,7 @@ public class UserService {
     public PatchNicknameRes modifyUserNickname(Long userIdx, PatchNicknameReq patchNicknameReq) throws Exception {
         try{
             //중복 로직 필요(기존에 닉네임이 존재하는지)
-            User user = userRepository.findOne(userIdx);
+            User user = userRepository.findById(userIdx).get();
             user.setNickname(patchNicknameReq.getNickname());
 
             return new PatchNicknameRes("닉네임 변경을 성공했습니다");
@@ -134,7 +135,7 @@ public class UserService {
     @Transactional
     public PatchUserImageRes modifyUserImage(Long userIdx, PatchUserImageReq patchUserImageReq) throws Exception {
         try{
-            User user = userRepository.findOne(userIdx);
+            User user = userRepository.findById(userIdx).get();
             user.setImage(patchUserImageReq.getImage());
 
             return new PatchUserImageRes("프로필 사진 변경을 성공했습니다");
@@ -147,7 +148,7 @@ public class UserService {
     @Transactional
     public PatchUserStatusRes modifyUserStatus(Long userIdx) throws Exception {
         try{
-            User user = userRepository.findOne(userIdx);
+            User user = userRepository.findById(userIdx).get();
             user.setStatus(Status.INACTIVE);
             return new PatchUserStatusRes("회원 탈퇴를 성공했습니다");
 

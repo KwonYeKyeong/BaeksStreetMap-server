@@ -10,20 +10,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	boolean existsByEmail(String email);
 
 	boolean existsByNickname(String nickname);
-    public void save(User user) {
-        em.persist(user);
-    }
 
-    public User findOne(Long id) {
-        return em.find(User.class, id);
-    }
+	User findByLoginId(String logidId);
 
-    public User findByLoginId(String loginId) {
-        return em.find(User.class, loginId);
-    }
-
-    public User checkEmail(String email) {
-        return em.find(User.class, email);
-    }
+    User findByEmail(String email);
 
 }
