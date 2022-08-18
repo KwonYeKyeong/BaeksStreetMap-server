@@ -30,7 +30,6 @@ public class UserService {
         try{
             //암호화
             pwd = new SHA256().encrypt(postUserReq.getPassword());
-            postUserReq.setPassword(pwd);
         } catch (Exception ignored) {
 
             throw new Exception("비밀번호 암호화 오류");
@@ -39,7 +38,7 @@ public class UserService {
             User user = new User();
             user.setLoginId(postUserReq.getLoginId());
             user.setEmail(postUserReq.getEmail());
-            user.setPassword(postUserReq.getPassword());
+            user.setPassword(pwd);
             user.setNickname(postUserReq.getNickname());
             user.setStatus(Status.ACTIVE);
 
