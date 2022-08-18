@@ -4,15 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.server.baeksstreetmapserver.common.Status;
-
-
 import umc.server.baeksstreetmapserver.review.dto.*;
-
-
 import umc.server.baeksstreetmapserver.review.entity.Keyword;
+import umc.server.baeksstreetmapserver.review.entity.Report;
 import umc.server.baeksstreetmapserver.review.entity.Review;
 import umc.server.baeksstreetmapserver.review.entity.ReviewKeyword;
 import umc.server.baeksstreetmapserver.review.repository.KeywordRepository;
+import umc.server.baeksstreetmapserver.review.repository.ReportRepository;
 import umc.server.baeksstreetmapserver.review.repository.ReviewKeywordRepository;
 import umc.server.baeksstreetmapserver.review.repository.ReviewRepository;
 import umc.server.baeksstreetmapserver.store.entity.Menu;
@@ -22,7 +20,6 @@ import umc.server.baeksstreetmapserver.store.repository.StoreRepository;
 
 
 import java.util.List;
-
 
 
 @Transactional(readOnly = true)
@@ -35,8 +32,10 @@ public class ReviewService {
     private final StoreRepository storeRepository;
     private final KeywordRepository keywordRepository;
     private final ReviewKeywordRepository reviewKeywordRepository;
+    private final ReportRepository reportRepository;
 
     @Transactional
+
     public RegisterReviewResponse registerReview(Long storeIdx, RegisterReviewRequest request) {
 
         Menu menu = menuRepository.findById(request.getBestMenu()).get();
@@ -99,5 +98,23 @@ public class ReviewService {
         return new DeleteReviewResponse(reviewIdx, review.getStatus());
     }
 
+    @Transactional
+    public ReportReviewResponse reportReview(Long reviewIdx, ReportReviewRequest request) {
+        Review review = reviewRepository.findById(reviewIdx).get();
+        Report report = Report.builder()
+                .reason(request.getReportReason())
+                .status(Status.ACTIVE)
+                .review(review)
+                .build();
+        reportRepository.save(report);
+
+        // 3번 신고되면 비활성화
+        List<Report> reportList = reportRepository.findByReview(review);
+        if(reportList.size() >= 3) {
+            review.delete();
+        }
+        return new ReportReviewResponse(review.getIdx());
+
+    }
 
 }
