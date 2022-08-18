@@ -21,6 +21,7 @@ import javax.validation.Valid;
 @RequestMapping(value = "/users")
 @RestController
 public class UserController {
+
     private final UserService userService;
     private final JwtService jwtService;
 
@@ -85,8 +86,6 @@ public class UserController {
 
     //비밀번호 변경
     //변경된 정보들도 형식에 맞는지 확인 필요
-    @ResponseBody
-    //PostLoginRes
     @PatchMapping("/{userIdx}/password")
     public ResponseEntity<PatchPasswordRes> modifyUserPassword(@PathVariable("userIdx") Long userIdx, @RequestBody PatchPasswordReq patchPasswordReq){
         try {
@@ -110,18 +109,12 @@ public class UserController {
     }
 
     //닉네임 변경
-    //중복 로직 필요
-    @ResponseBody
     @PatchMapping("/{userIdx}/nickname")
     public ResponseEntity<PatchNicknameRes> modifyUserNickname(@PathVariable("userIdx") Long userIdx, @RequestBody PatchNicknameReq patchNicknameReq){
         try {
             Long userIdxByJwt = jwtService.getUserIdx();
             if(userIdx != userIdxByJwt){
                 //return new BaseResponse<>(INVALID_USER_JWT);
-                return ResponseEntity.notFound().build();
-            }
-
-            if(patchNicknameReq.getNickname().length() < 1 || patchNicknameReq.getNickname().length() > 10){
                 return ResponseEntity.notFound().build();
             }
 
@@ -134,8 +127,24 @@ public class UserController {
         }
     }
 
+    // 이메일 변경
+    @PatchMapping("/{userIdx}/email")
+    public ResponseEntity<PatchEmailRes> modifyUserNickname(@PathVariable Long userIdx, @RequestBody PatchEmailReq patchEmailReq){
+        try {
+            Long userIdxByJwt = jwtService.getUserIdx();
+            if(userIdx != userIdxByJwt){
+                return ResponseEntity.notFound().build();
+            }
+
+            PatchEmailRes patchEmailRes = userService.modifyUserEmail(userIdx, patchEmailReq.getEmail());
+
+            return new ResponseEntity<>(patchEmailRes, HttpStatus.OK);
+        } catch (Exception exception) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     //프로필 사진 변경
-    @ResponseBody
     @PatchMapping("/{userIdx}/image")
     public ResponseEntity<PatchUserImageRes> modifyUserImage(@PathVariable("userIdx") Long userIdx, @RequestBody PatchUserImageReq patchUserImageReq){
         try {
@@ -153,7 +162,6 @@ public class UserController {
     }
 
     //회원탈퇴
-    @ResponseBody
     @PatchMapping("/{userIdx}/status")
     public ResponseEntity<PatchUserStatusRes> modifyUserStatus(@PathVariable("userIdx") Long userIdx){
         try {

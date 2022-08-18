@@ -133,6 +133,18 @@ public class UserService {
     }
 
     @Transactional
+    public PatchEmailRes modifyUserEmail(Long userIdx, String email){
+        if (emailDuplicateCheck(email)) {
+            return new PatchEmailRes("이메일 변경이 불가능합니다.(이메일 중복)");
+        }
+
+        User user = userRepository.findById(userIdx).get();
+        user.setEmail(email);
+
+        return new PatchEmailRes("이메일 변경을 성공했습니다.");
+    }
+
+    @Transactional
     public PatchUserImageRes modifyUserImage(Long userIdx, PatchUserImageReq patchUserImageReq) throws Exception {
         try{
             User user = userRepository.findById(userIdx).get();
