@@ -67,7 +67,7 @@ public class ReviewService {
         Review review = reviewRepository.findById(reviewIdx).get();
         Menu menu = menuRepository.findById(request.getBestMenu()).get();
         // 기존의 keyword 삭제
-        List<ReviewKeyword> reviewKeywordList = reviewKeywordRepository.findKeywordByReview(review);
+        List<ReviewKeyword> reviewKeywordList = reviewKeywordRepository.findByReview(review);
         for(ReviewKeyword reviewKeyword : reviewKeywordList) {
             reviewKeywordRepository.delete(reviewKeyword);
         }

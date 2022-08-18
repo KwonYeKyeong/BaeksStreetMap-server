@@ -87,7 +87,7 @@ public class StoreService {
 		List<Review> reviewList = reviewRepository.findByStoreOrderByCreatedAtDesc(store);
 		List<ReviewDto> reviewDtoList = new ArrayList<>();
 		for (Review review : reviewList) {
-			List<Keyword> keywordList = reviewKeywordRepository.findByReview(review);
+			List<Keyword> keywordList = reviewKeywordRepository.findKeywordByReview(review);
 			reviewDtoList.add(ReviewDto.of(review, keywordList));
 		}
 
