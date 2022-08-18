@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.server.baeksstreetmapserver.common.Status;
 
+
 import umc.server.baeksstreetmapserver.review.dto.*;
+
 
 import umc.server.baeksstreetmapserver.review.entity.Keyword;
 import umc.server.baeksstreetmapserver.review.entity.Review;
@@ -35,9 +37,7 @@ public class ReviewService {
     private final ReviewKeywordRepository reviewKeywordRepository;
 
     @Transactional
-
     public RegisterReviewResponse registerReview(Long storeIdx, RegisterReviewRequest request) {
-
 
         Menu menu = menuRepository.findById(request.getBestMenu()).get();
         Store store = storeRepository.findById(storeIdx).get();
@@ -87,6 +87,7 @@ public class ReviewService {
         return new ModifyReviewResponse(reviewIdx, review.getUpdatedAt());
     }
 
+
     @Transactional
     public DeleteReviewResponse deleteReview(Long reviewIdx) {
         Review review = reviewRepository.findById(reviewIdx).get();
@@ -97,5 +98,6 @@ public class ReviewService {
         review.delete();
         return new DeleteReviewResponse(reviewIdx, review.getStatus());
     }
+
 
 }

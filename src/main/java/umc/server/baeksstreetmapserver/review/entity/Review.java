@@ -65,8 +65,7 @@ public class Review extends BaseEntity {
     }
 
     @Builder
-    public Review(Long idx, boolean likes, Long changes, String text, Menu menu, Status status, Store store) {
-        this.idx = idx;
+    public Review(boolean likes, Long changes, String text, Menu menu, Status status, Store store) {
         this.likes = likes;
         this.changes = changes;
         this.text = text;

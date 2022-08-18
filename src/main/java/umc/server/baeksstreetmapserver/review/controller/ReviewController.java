@@ -28,10 +28,12 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+
     @PatchMapping("/{reviewIdx}/status")
     public ResponseEntity<DeleteReviewResponse> deleteReview(@PathVariable Long reviewIdx) {
         DeleteReviewResponse response = reviewService.deleteReview(reviewIdx);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
 
 }
