@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import umc.server.baeksstreetmapserver.common.Status;
 import umc.server.baeksstreetmapserver.review.dto.ReviewDto;
 import umc.server.baeksstreetmapserver.review.entity.Keyword;
 import umc.server.baeksstreetmapserver.review.entity.Review;
@@ -58,7 +59,7 @@ public class StoreService {
 
 		// 좋아요(%)
 		Long totalCnt = reviewRepository.countByStore(store);
-		Long likesCnt = reviewRepository.countByStoreAndLikes(store);
+		Long likesCnt = reviewRepository.countByStoreAndLikesAndStatus(store);
 
 		// 베스트 메뉴
 		Long bestMenuIdx = reviewRepository.getBestMenuIdx(storeIdx);
@@ -66,7 +67,7 @@ public class StoreService {
 			menuRepository.findFirstByStore(store) : menuRepository.getReferenceById(bestMenuIdx);
 
 		// 키워드 목록
-		List<Review> reviewList = reviewRepository.findByStoreOrderByCreatedAtDesc(store);
+		List<Review> reviewList = reviewRepository.findByStoreAndStatusOrderByCreatedAtDesc(store, Status.ACTIVE);
 		List<Long> keywordList = reviewKeywordRepository.findKeywordsIn(reviewList);
 
 		return new StoreBriefInfoResponse(
@@ -79,12 +80,12 @@ public class StoreService {
 
 		// 좋아요(%)
 		Long totalCnt = reviewRepository.countByStore(store);
-		Long likesCnt = reviewRepository.countByStoreAndLikes(store);
+		Long likesCnt = reviewRepository.countByStoreAndLikesAndStatus(store);
 
 		// 메뉴 목록
 		List<Menu> menuList = menuRepository.findByStore(store);
 
-		List<Review> reviewList = reviewRepository.findByStoreOrderByCreatedAtDesc(store);
+		List<Review> reviewList = reviewRepository.findByStoreAndStatusOrderByCreatedAtDesc(store, Status.ACTIVE);
 		List<ReviewDto> reviewDtoList = new ArrayList<>();
 		for (Review review : reviewList) {
 			List<Keyword> keywordList = reviewKeywordRepository.findKeywordByReview(review);
@@ -117,7 +118,7 @@ public class StoreService {
 		for (Store store : storeSet) {
 			// 좋아요(%)
 			Long totalCnt = reviewRepository.countByStore(store);
-			Long likesCnt = reviewRepository.countByStoreAndLikes(store);
+			Long likesCnt = reviewRepository.countByStoreAndLikesAndStatus(store);
 
 			// 메뉴 목록
 			List<Menu> menuList = menuRepository.findByStore(store);

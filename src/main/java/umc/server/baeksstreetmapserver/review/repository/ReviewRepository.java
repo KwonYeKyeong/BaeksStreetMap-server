@@ -2,6 +2,7 @@ package umc.server.baeksstreetmapserver.review.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import umc.server.baeksstreetmapserver.common.Status;
 import umc.server.baeksstreetmapserver.review.entity.Review;
 import umc.server.baeksstreetmapserver.store.entity.Store;
 
@@ -11,8 +12,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
 	Long countByStore(Store store);
 
-	@Query("SELECT COUNT(*) FROM Review r WHERE r.store = :store AND r.likes = 'Y'")
-	Long countByStoreAndLikes(Store store);
+	@Query("SELECT COUNT(*) FROM Review r WHERE r.store = :store AND r.likes = 'Y' AND r.status = 'ACTIVE'")
+	Long countByStoreAndLikesAndStatus(Store store);
 
 	@Query(value = "SELECT r.changes\n" +
 		"FROM review r JOIN store s ON r.store_idx = s.idx\n" +
@@ -28,6 +29,6 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 		"ORDER BY COUNT(r.menu_idx) DESC LIMIT 1", nativeQuery = true)
 	Long getBestMenuIdx(Long storeIdx);
 
-	List<Review> findByStoreOrderByCreatedAtDesc(Store store);
+	List<Review> findByStoreAndStatusOrderByCreatedAtDesc(Store store, Status status);
 
 }
