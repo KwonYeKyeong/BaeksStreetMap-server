@@ -43,7 +43,7 @@ public class StoreService {
 		latitudes.sort(Comparator.naturalOrder());
 		longitudes.sort(Comparator.naturalOrder());
 
-		List<Store> storesInBoundary = storeRepository.findByBoundary(longitudes.get(0), longitudes.get(1), longitudes.get(0), latitudes.get(1));
+		List<Store> storesInBoundary = storeRepository.findByBoundary(latitudes.get(0), latitudes.get(1), longitudes.get(0), longitudes.get(1));
 
 		return storesInBoundary.stream()
 			.map(storeMapper::toResponse)
