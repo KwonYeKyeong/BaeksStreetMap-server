@@ -14,7 +14,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .httpBasic().disable() // 기본 방식 안쓰고 Bearer(jwt) 방법 사용할 것
                 .authorizeRequests()
-                .antMatchers("/users/**","/stores/**", "/reviews/**").permitAll()
+                //.antMatchers("/users/**","/stores/**", "/reviews/**").permitAll()
                 .anyRequest().authenticated();
     }
 }
